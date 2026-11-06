@@ -5,12 +5,11 @@ import { initGlobe, resizeGlobe } from './globe/globe.ts';
 import { setMarkers } from './globe/markers.ts';
 import { setSunPosition } from './globe/shader.ts';
 import { subsolarPoint } from './lib/sun.ts';
-import { loadCities, saveCities } from './lib/store.ts';
+import { loadCities, saveCities, MAX_CITIES } from './lib/store.ts';
 import { nearestCity } from './lib/nearestCity.ts';
 import { renderPanel, tickPanel } from './ui/panel.ts';
 import { initSearch } from './ui/search.ts';
 
-const MAX_CITIES = 100;
 const allCities = citiesData as City[];
 const state: { cities: City[] } = { cities: loadCities() };
 
@@ -33,12 +32,16 @@ function toast(msg: string): void {
 function boot(): void {
   const globeEl = document.getElementById('globe')!;
   const panelList = document.getElementById('city-list')!;
+  const countEl = document.getElementById('count')!;
+  const utcClockEl = document.getElementById('utc-clock')!;
+  const utcDateEl = document.getElementById('utc-date')!;
   const searchInput = document.getElementById('search') as HTMLInputElement;
   const resultsEl = document.getElementById('results')!;
 
   let refreshMarkers = () => {};
-
   let flyTo: (c: City) => void = () => {};
+
+  const drawPanel = () => renderPanel(panelList, countEl, state.cities, MAX_CITIES, removeCity);
 
   const addCity = (city: City): boolean => {
     if (state.cities.some((c) => c.id === city.id)) return false;
@@ -48,7 +51,7 @@ function boot(): void {
     }
     state.cities.push(city);
     saveCities(state.cities);
-    renderPanel(panelList, state.cities, removeCity);
+    drawPanel();
     tickPanel(state.cities, new Date());
     refreshMarkers();
     return true;
@@ -57,17 +60,31 @@ function boot(): void {
   function removeCity(id: string): void {
     state.cities = state.cities.filter((c) => c.id !== id);
     saveCities(state.cities);
-    renderPanel(panelList, state.cities, removeCity);
+    drawPanel();
     tickPanel(state.cities, new Date());
     refreshMarkers();
   }
 
+  const tickClock = () => {
+    const now = new Date();
+    utcClockEl.textContent = `${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}`;
+  };
+  utcDateEl.textContent = `UTC · ${new Intl.DateTimeFormat('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date())}`;
+  tickClock();
+
   initSearch(searchInput, resultsEl, allCities, (c) => {
     if (addCity(c)) flyTo(c);
   });
-  renderPanel(panelList, state.cities, removeCity);
+  drawPanel();
 
   setInterval(() => {
+    tickClock();
     tickPanel(state.cities, new Date());
   }, 1000);
 

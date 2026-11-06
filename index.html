@@ -4,14 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Timezone Globe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="app">
       <div id="globe"></div>
       <aside id="panel">
-        <h1>Timezone Globe</h1>
-        <input id="search" type="search" placeholder="Search cities…" autocomplete="off" />
+        <header id="panel-header">
+          <div class="kicker">Timezone Globe</div>
+          <div class="utc" id="utc-clock">--:--</div>
+          <div class="date" id="utc-date">UTC</div>
+        </header>
+        <div class="search-wrap">
+          <div class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8aa6ff" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" />
+            </svg>
+            <input id="search" type="search" placeholder="Search cities to pin…" autocomplete="off" />
+          </div>
+        </div>
         <ul id="results"></ul>
+        <div class="section">
+          <div class="kicker">Pinned cities</div>
+          <div class="count" id="count">0 / 100</div>
+        </div>
         <ul id="city-list"></ul>
       </aside>
     </div>

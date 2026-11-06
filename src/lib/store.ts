@@ -1,5 +1,7 @@
 import type { City } from '../types.ts';
 
+export const MAX_CITIES = 100;
+
 const KEY = 'timezone-globe:v1';
 
 export function loadCities(): City[] {
