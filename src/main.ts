@@ -33,8 +33,8 @@ function boot(): void {
   const globeEl = document.getElementById('globe')!;
   const panelList = document.getElementById('city-list')!;
   const countEl = document.getElementById('count')!;
-  const utcClockEl = document.getElementById('utc-clock')!;
-  const utcDateEl = document.getElementById('utc-date')!;
+  const localClockEl = document.getElementById('local-clock')!;
+  const localDateEl = document.getElementById('local-date')!;
   const searchInput = document.getElementById('search') as HTMLInputElement;
   const resultsEl = document.getElementById('results')!;
 
@@ -65,17 +65,17 @@ function boot(): void {
     refreshMarkers();
   }
 
-  const tickClock = () => {
-    const now = new Date();
-    utcClockEl.textContent = `${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}`;
-  };
-  utcDateEl.textContent = `UTC · ${new Intl.DateTimeFormat('en-GB', {
+  const dateFormat = new Intl.DateTimeFormat('en-GB', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date())}`;
+  });
+  const tickClock = () => {
+    const now = new Date();
+    localClockEl.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    localDateEl.textContent = `Local · ${dateFormat.format(now)}`;
+  };
   tickClock();
 
   initSearch(searchInput, resultsEl, allCities, (c) => {
