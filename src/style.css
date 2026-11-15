@@ -42,7 +42,7 @@ body {
   font-weight: 600;
 }
 
-.utc {
+.local {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 52px;
   font-weight: 600;
@@ -287,7 +287,7 @@ body {
     border-top: 1px solid #263352;
   }
 
-  .utc {
+  .local {
     font-size: 40px;
   }
 
