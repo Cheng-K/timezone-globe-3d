@@ -1,2 +1,7 @@
 node_modules/
 .mimocode/
+dist/
+design-qa/
+design-qa.md
+.DS_Store
+*.local

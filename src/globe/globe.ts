@@ -14,11 +14,12 @@ export async function initGlobe(el: HTMLElement): Promise<GlobeHandle> {
   globe.pointOfView({ lat: 20, lng: 0, altitude: 2.5 });
 
   let material: ShaderMaterial;
+  const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
   try {
     const loader = new TextureLoader();
     const [dayTexture, nightTexture] = await Promise.all([
-      loader.loadAsync('/textures/earth-day.jpg'),
-      loader.loadAsync('/textures/earth-night.jpg'),
+      loader.loadAsync(asset('textures/earth-day.jpg')),
+      loader.loadAsync(asset('textures/earth-night.jpg')),
     ]);
     material = makeDayNightMaterial(dayTexture, nightTexture);
   } catch {
@@ -27,7 +28,7 @@ export async function initGlobe(el: HTMLElement): Promise<GlobeHandle> {
 
   globe
     .globeMaterial(material)
-    .backgroundImageUrl('/textures/night-sky.png')
+    .backgroundImageUrl(asset('textures/night-sky.png'))
     // Sun direction must follow the globe mesh's rotation as the user orbits.
     .onZoom(({ lng, lat }: { lng: number; lat: number; altitude: number }) =>
       material.uniforms.globeRotation.value.set(lng, lat)
